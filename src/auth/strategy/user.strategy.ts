@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { UserService } from '../../users/services/user.service';
+import { UserService } from '../../user/services/user.service';
 
 @Injectable()
 export class UserStrategy {

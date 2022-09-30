@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UserService } from '../../users/services/user.service';
+import { UserService } from '../../user/services/user.service';
 
 @Injectable()
 export class VerifyStrategy {
