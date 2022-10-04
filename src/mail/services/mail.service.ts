@@ -16,7 +16,7 @@ export class MailService {
 
     await this.mailerService.sendMail({
       to: user.email,
-      subject: 'Welcome to ForumEcho! Confirm your Email',
+      subject: 'Welcome to nestjs-template! Confirm your Email',
       template: './confirmation.hbs',
       context: {
         name: user.username,
@@ -28,7 +28,7 @@ export class MailService {
   async sendUserInformation(user: User): Promise<void> {
     await this.mailerService.sendMail({
       to: user.email,
-      subject: 'Login to your ForumEcho account',
+      subject: 'Login to your nestjs-template account',
       template: './information.hbs',
       context: {
         name: user.username,
