@@ -4,12 +4,14 @@ import { Model } from 'mongoose';
 import { User } from '../models/user.model';
 import * as crypto from 'crypto';
 import { Salt } from '../models/salt.model';
+import { MailService } from '../../mail/services/mail.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel('User') private readonly userModel: Model<User>,
-    @InjectModel('Salt') private readonly saltModel: Model<Salt>, // private mailService: MailService,
+    @InjectModel('Salt') private readonly saltModel: Model<Salt>,
+    private mailService: MailService,
   ) {}
 
   async getUserById(user_id: string): Promise<any> {
@@ -97,11 +99,13 @@ export class UserService {
       throw new NotFoundException('user_not_found');
     }
 
-    user.token = this.generateId(12);
+    const token = this.generateId(12);
+
+    user.token = token;
 
     user.save();
 
-    // await this.mailService.sendForgetPassword(user, token);
+    await this.mailService.sendForgetPassword(user, token);
 
     return { user: user.username };
   }
@@ -121,7 +125,7 @@ export class UserService {
 
     user.save();
 
-    // await this.mailService.sendPasswordInfo(user);
+    await this.mailService.sendPasswordInfo(user);
 
     return user;
   }
