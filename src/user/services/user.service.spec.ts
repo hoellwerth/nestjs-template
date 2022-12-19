@@ -26,9 +26,9 @@ export const mockUser = (
 export class UserModel {
   constructor(private data) {}
   save = jest.fn().mockResolvedValue(this.data);
-  static find = jest.fn().mockResolvedValue([]);
+  static find = jest.fn().mockResolvedValue(mockUser());
   static findOne = jest.fn().mockResolvedValue(mockUser());
-  static findOneAndUpdate = jest.fn().mockResolvedValue([]);
+  static findOneAndUpdate = jest.fn().mockResolvedValue(mockUser());
   static deleteOne = jest.fn().mockResolvedValue(true);
   static findById = jest.fn().mockResolvedValue(mockUser());
   static findByIdAndDelete = jest.fn().mockResolvedValue(true);
