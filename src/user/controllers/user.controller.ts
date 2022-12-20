@@ -37,20 +37,6 @@ export class UserController {
     return this.registerService.register(username, password, email);
   }
 
-  // POST /login
-  @UseGuards(LocalAuthGuard, VerifyGuard)
-  @Post('login')
-  async login(@Request() req: any): Promise<any> {
-    const token = await this.authService.login(req.user);
-    const user = await this.userService.getUserByName(req.user.username);
-
-    return {
-      access_token: token,
-      id: user._id,
-      role: user.role,
-    };
-  }
-
   // PATCH /edit
   @UseGuards(JwtAuthGuard, UserGuard, VerifyGuard)
   @Patch('edit')
