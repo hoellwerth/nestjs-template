@@ -22,6 +22,13 @@ export class SaltModel {
   static findOneAndDelete = jest.fn().mockResolvedValue(true);
 }
 
+export class RegisterServiceMock {
+  static register = jest.fn();
+  static salt = jest.fn();
+  static verify = jest.fn();
+  static generateId = jest.fn();
+}
+
 describe('RegisterService', () => {
   let service: RegisterService;
   let userService: UserService;
