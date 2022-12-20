@@ -36,9 +36,9 @@ export class UserModel {
 }
 
 export class UserServiceMock {
-  static getUserById = jest.fn();
+  static getUserById = jest.fn().mockResolvedValue(mockUser());
   static getUserByName = jest.fn().mockResolvedValue(mockUser());
-  static getUserByToken = jest.fn();
+  static getUserByToken = jest.fn().mockResolvedValue(mockUser());
   static deleteUser = jest.fn();
   static editUser = jest.fn();
   static verifyUser = jest.fn();
