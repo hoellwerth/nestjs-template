@@ -9,14 +9,13 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { RegisterService } from './services/register.service';
-import { LocalAuthGuard } from '../auth/guard/local.guard';
-import { JwtAuthGuard } from '../auth/guard/jwt.guard';
-import { UserService } from './services/user.service';
-import { UserGuard } from '../auth/guard/user.guard';
+import { RegisterService } from '../services/register.service';
+import { JwtAuthGuard } from '../../auth/guard/jwt.guard';
+import { UserService } from '../services/user.service';
+import { UserGuard } from '../../auth/guard/user.guard';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { VerifyGuard } from '../auth/guard/verify.guard';
-import { AuthService } from '../auth/services/auth.service';
+import { VerifyGuard } from '../../auth/guard/verify.guard';
+import { AuthService } from '../../auth/services/auth.service';
 
 @UseGuards(ThrottlerGuard)
 @Controller('user')
@@ -58,8 +57,6 @@ export class UserController {
       username: user.username,
       email: user.email,
       role: user.role,
-      bio: user.bio,
-      status: user.status,
     };
   }
 
@@ -72,8 +69,6 @@ export class UserController {
       username: user.username,
       email: user.email,
       role: user.role,
-      bio: user.bio,
-      status: user.status,
     };
   }
 
