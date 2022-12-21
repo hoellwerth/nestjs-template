@@ -91,9 +91,14 @@ describe('UserService', () => {
   });
 
   it('should get user by name', async () => {
+    const userSpy = jest
+      .spyOn(userModel, 'findOne')
+      .mockResolvedValue(mockUser());
+
     const user = await userService.getUserByName('');
 
     expect(user).toEqual(mockUser());
+    expect(userSpy).toHaveBeenCalled();
   });
 
   it('should get user by token', async () => {
