@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { User } from '../../../../forum-echo/backend/src/modules/users/models/user.model';
 import * as dotenv from 'dotenv';
+import { User } from '../../user/models/user.model';
 
 dotenv.config({
   path: 'src/modules/environment/config/dev.env',
