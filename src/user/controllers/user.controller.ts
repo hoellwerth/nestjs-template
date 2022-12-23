@@ -12,10 +12,10 @@ import {
 import { RegisterService } from '../services/register.service';
 import { JwtAuthGuard } from '../../auth/guard/jwt.guard';
 import { UserService } from '../services/user.service';
-import { UserGuard } from '../../auth/guard/user.guard';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { VerifyGuard } from '../../auth/guard/verify.guard';
+import { VerifyAuthGuard } from '../../auth/guard/verify.guard';
 import { AuthService } from '../../auth/services/auth.service';
+import { UserAuthGuard } from '../../auth/guard/user.guard';
 
 @UseGuards(ThrottlerGuard)
 @Controller('user')
@@ -37,7 +37,7 @@ export class UserController {
   }
 
   // PATCH /edit
-  @UseGuards(JwtAuthGuard, UserGuard, VerifyGuard)
+  @UseGuards(JwtAuthGuard, UserAuthGuard, VerifyAuthGuard)
   @Patch('edit')
   edit(
     @Request() req: any,
@@ -48,7 +48,7 @@ export class UserController {
   }
 
   // GET /get
-  @UseGuards(JwtAuthGuard, UserGuard, VerifyGuard)
+  @UseGuards(JwtAuthGuard, UserAuthGuard, VerifyAuthGuard)
   @Get('get')
   async getUser(@Request() req: any): Promise<any> {
     const user = await this.userService.getUserById(req.user.id);
@@ -73,7 +73,7 @@ export class UserController {
   }
 
   // DELETE /
-  @UseGuards(JwtAuthGuard, UserGuard, VerifyGuard)
+  @UseGuards(JwtAuthGuard, UserAuthGuard, VerifyAuthGuard)
   @Delete('')
   async deleteUser(@Request() req: any) {
     return this.userService.deleteUser(req.user.id);
