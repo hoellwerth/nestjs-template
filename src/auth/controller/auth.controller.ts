@@ -2,7 +2,7 @@ import { Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { UserService } from '../../user/services/user.service';
 import { LocalAuthGuard } from '../guard/local.guard';
-import { VerifyGuard } from '../guard/verify.guard';
+import { VerifyAuthGuard } from '../guard/verify.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -12,7 +12,7 @@ export class AuthController {
   ) {}
 
   // POST /login
-  @UseGuards(LocalAuthGuard, VerifyGuard)
+  @UseGuards(LocalAuthGuard, VerifyAuthGuard)
   @Post('login')
   async login(@Request() req: any): Promise<any> {
     const token = await this.authService.login(req.user);
