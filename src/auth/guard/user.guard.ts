@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { UserStrategy } from '../strategy/user.strategy';
 
 @Injectable()
-export class UserGuard implements CanActivate {
+export class UserAuthGuard implements CanActivate {
   constructor(private readonly userStrategy: UserStrategy) {}
 
   canActivate(

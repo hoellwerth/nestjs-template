@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import { VerifyStrategy } from '../strategy/verify.strategy';
 
 @Injectable()
-export class VerifyGuard implements CanActivate {
-  constructor(private verifyStrategy: VerifyStrategy) {}
+export class VerifyAuthGuard implements CanActivate {
+  constructor(private readonly verifyStrategy: VerifyStrategy) {}
 
   canActivate(
     context: ExecutionContext,
