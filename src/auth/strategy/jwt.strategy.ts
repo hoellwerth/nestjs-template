@@ -7,11 +7,11 @@ dotenv.config({
 });
 
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+  constructor(secret: string) {
     super({
       ignoreExpiration: false,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_SECRET,
+      secretOrKey: secret || process.env.JWT_SECRET,
     });
   }
 
