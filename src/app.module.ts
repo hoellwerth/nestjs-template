@@ -17,11 +17,11 @@ dotenv.config({ path: 'src/environment/dev.env' });
     MailModule,
     AuthModule,
     UserModule,
+    LogModule,
     ThrottlerModule.forRoot({
       ttl: 60,
       limit: 30,
     }),
-    LogModule,
   ],
   controllers: [AppController],
   providers: [AppService],
