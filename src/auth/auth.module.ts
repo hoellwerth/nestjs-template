@@ -8,6 +8,7 @@ import { LocalStrategy } from './strategy/local.strategy';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { UserStrategy } from './strategy/user.strategy';
 import { VerifyStrategy } from './strategy/verify.strategy';
+import { AuthController } from './controller/auth.controller';
 
 dotenv.config({
   path: 'src/environment/dev.env',
@@ -30,5 +31,6 @@ dotenv.config({
     VerifyStrategy,
   ],
   exports: [AuthService],
+  controllers: [AuthController],
 })
 export class AuthModule {}
