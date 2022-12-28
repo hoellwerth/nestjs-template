@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { MailModule } from './mail/mail.module';
+import { LogModule } from './log/log.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config({ path: 'src/environment/dev.env' });
@@ -16,6 +17,7 @@ dotenv.config({ path: 'src/environment/dev.env' });
     MailModule,
     AuthModule,
     UserModule,
+    LogModule,
     ThrottlerModule.forRoot({
       ttl: 60,
       limit: 30,
