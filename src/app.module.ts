@@ -7,13 +7,15 @@ import { UserModule } from './user/user.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { MailModule } from './mail/mail.module';
 import { LogModule } from './log/log.module';
-import * as dotenv from 'dotenv';
-
-dotenv.config({ path: 'src/environment/dev.env' });
+import { DatabaseModule } from './database/database.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.DB_URL, { dbName: 'test' }),
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+    }),
     MailModule,
     AuthModule,
     UserModule,
