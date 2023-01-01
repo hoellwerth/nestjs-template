@@ -1,10 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { VerifyStrategy } from './verify.strategy';
 import { UserService } from '../../user/services/user.service';
-import {
-  mockUser,
-  UserServiceMock,
-} from '../../user/services/user.service.spec';
+import { UserServiceMock } from '../../user/services/user.service.spec';
+import { userStub } from '../../../test/stubs/user.stub';
 
 describe('VerifyStrategy', () => {
   let verifyStrategy: VerifyStrategy;
@@ -30,7 +28,7 @@ describe('VerifyStrategy', () => {
   it('should verify a user', async () => {
     const userSpy = jest
       .spyOn(UserServiceMock, 'getUserById')
-      .mockResolvedValue(mockUser());
+      .mockResolvedValue(userStub());
 
     expect(await verifyStrategy.verifyUser({ user: { id: '123' } })).toEqual(
       true,

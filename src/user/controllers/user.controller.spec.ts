@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from '../services/user.service';
-import { mockUser, UserServiceMock } from '../services/user.service.spec';
+import { UserServiceMock } from '../services/user.service.spec';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { RegisterService } from '../services/register.service';
@@ -10,6 +10,7 @@ import { VerifyStrategy } from '../../auth/strategy/verify.strategy';
 import { UserStrategy } from '../../auth/strategy/user.strategy';
 import { AuthService } from '../../auth/services/auth.service';
 import { AuthServiceMock } from '../../auth/services/auth.service.spec';
+import { userStub } from '../../../test/stubs/user.stub';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -104,7 +105,7 @@ describe('UserController', () => {
   it('should get the current user', async () => {
     const userSpy = jest
       .spyOn(userService, 'getUserById')
-      .mockResolvedValue(mockUser());
+      .mockResolvedValue(userStub());
 
     const user = await controller.getUser({
       user: { id: Date.now().toString() },
@@ -115,13 +116,13 @@ describe('UserController', () => {
       ...user,
       password: 'Test12345678',
       token: null,
-    }).toEqual(mockUser());
+    }).toEqual(userStub());
   });
 
   it('should get a user by userid', async () => {
     const userSpy = jest
       .spyOn(userService, 'getUserById')
-      .mockResolvedValue(mockUser());
+      .mockResolvedValue(userStub());
 
     const user = await controller.getUserById('1');
 
@@ -130,7 +131,7 @@ describe('UserController', () => {
       ...user,
       password: 'Test12345678',
       token: null,
-    }).toEqual(mockUser());
+    }).toEqual(userStub());
   });
 
   it('should delete a user', async () => {

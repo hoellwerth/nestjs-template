@@ -5,10 +5,11 @@ import { Model } from 'mongoose';
 import { Salt } from '../models/salt.model';
 import { UserService } from './user.service';
 import { MailService } from '../../mail/services/mail.service';
-import { mockUser, UserModel, UserServiceMock } from './user.service.spec';
+import { UserModel, UserServiceMock } from './user.service.spec';
 import { MailServiceMock } from '../../mail/services/mail.service.spec';
 import { getModelToken } from '@nestjs/mongoose';
 import * as crypto from 'crypto';
+import { userStub } from '../../../test/stubs/user.stub';
 
 export class SaltModel {
   constructor(private data) {}
@@ -83,9 +84,9 @@ describe('RegisterService', () => {
     const emailSpy = jest.spyOn(userModel, 'findOne').mockResolvedValue(null);
 
     const user = await service.register(
-      mockUser().username,
-      mockUser().email,
-      mockUser().password,
+      userStub().username,
+      userStub().email,
+      userStub().password,
     );
 
     expect(user.success).toBeUndefined();
@@ -100,9 +101,9 @@ describe('RegisterService', () => {
       .spyOn(service, 'generateId')
       .mockResolvedValue('12345678');
 
-    const password = service.salt(mockUser().password);
+    const password = service.salt(userStub().password);
 
-    expect(password.slice(mockUser().password.length).length).toBe(16);
+    expect(password.slice(userStub().password.length).length).toBe(16);
     expect(randomizationSpy).toBeCalled();
   });
 
