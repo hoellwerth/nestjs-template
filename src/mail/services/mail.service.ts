@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import { User } from '../../user/models/user.model';
 
 dotenv.config({
-  path: 'src/modules/environment/config/dev.env',
+  path: '.env',
 });
 
 @Injectable()
