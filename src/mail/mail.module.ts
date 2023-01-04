@@ -12,10 +12,10 @@ import { ConfigService } from '@nestjs/config';
         transport: {
           service: 'postfix',
           host: configService.get<string>('MAIL_HOST'),
-          port: 8025,
+          port: 587,
           secure: false,
           auth: {
-            user: 'noreply@baumistlustig.eu',
+            user: 'postmaster@sandboxaf04a5d2e77a420e8b153dc410575460.mailgun.org',
             pass: configService.get<string>('MAIL_PASSWORD'),
           },
           tls: { rejectUnauthorized: false },
@@ -24,7 +24,7 @@ import { ConfigService } from '@nestjs/config';
           from: '"No Reply" <noreply@test.eu>',
         },
         template: {
-          dir: join(__dirname, '../templates'),
+          dir: join(__dirname, './templates'),
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,
