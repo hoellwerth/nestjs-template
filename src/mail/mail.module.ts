@@ -15,7 +15,7 @@ import { ConfigService } from '@nestjs/config';
           port: 587,
           secure: false,
           auth: {
-            user: 'postmaster@sandboxaf04a5d2e77a420e8b153dc410575460.mailgun.org',
+            user: configService.get<string>('MAIL_USER'),
             pass: configService.get<string>('MAIL_PASSWORD'),
           },
           tls: { rejectUnauthorized: false },
