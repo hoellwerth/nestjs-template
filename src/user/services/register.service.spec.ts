@@ -87,9 +87,10 @@ describe('RegisterService', () => {
       userStub().username,
       userStub().email,
       userStub().password,
+      null,
     );
 
-    expect(user.success).toBeUndefined();
+    expect(user).toBeUndefined();
     expect(userSpy).toBeCalled();
     expect(hashSpy).toBeCalled();
     expect(mailSpy).toBeCalled();
