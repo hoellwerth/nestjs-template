@@ -114,7 +114,7 @@ describe('UserController', () => {
     expect(userSpy).toHaveBeenCalled();
     expect({
       ...user,
-      password: 'Test12345678',
+      password: userStub().password,
       token: null,
     }).toEqual(userStub());
   });
@@ -129,7 +129,7 @@ describe('UserController', () => {
     expect(userSpy).toHaveBeenCalled();
     expect({
       ...user,
-      password: 'Test12345678',
+      password: userStub().password,
       token: null,
     }).toEqual(userStub());
   });
