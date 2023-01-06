@@ -24,6 +24,7 @@ export class RegisterService {
     username: string,
     password: string,
     email: string,
+    role: string | null, // testing purposes
   ): Promise<any> {
     // Check Body
     if (!username || !password || !email) {
@@ -38,14 +39,14 @@ export class RegisterService {
     const user: any = await this.userService.getUserByName(username);
 
     if (user) {
-      throw new ConflictException('user_already_exists');
+      throw new ConflictException('User already exists');
     }
 
     // Check for existing email
     const query: any = await this.userModel.findOne({ email });
 
     if (query) {
-      throw new ConflictException('email_already_exists');
+      throw new ConflictException('Email already exists');
     }
 
     // salt password
@@ -59,9 +60,7 @@ export class RegisterService {
       username: username,
       email: email,
       password: hashedPassword,
-      authority: 3,
-      permissions: ['create_post', 'delete_own_post', 'vote'],
-      role: this.generateId(12),
+      role: role || this.generateId(12), // testing purposes
     });
 
     const result = await newUser.save();
@@ -76,7 +75,7 @@ export class RegisterService {
     // Sending Mail
     await this.mailService.sendUserConfirmation(newUser);
 
-    return { success: result.id };
+    return result.id;
   }
 
   // returns a password with an additional 16 random letters
