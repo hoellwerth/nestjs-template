@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as crypto from 'crypto';
 import { UserService } from '../../user/services/user.service';
@@ -9,9 +9,15 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
+
   async validateUser(username: string, password: string): Promise<any> {
     // get user from database
     const user = await this.userService.getUserByName(username);
+
+    // check if user exists
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
     // get salt from database
     const salt = await this.userService.getSalt(user._id);
@@ -20,7 +26,7 @@ export class AuthService {
     const hashedPassword = this.hash(password + salt);
 
     // check if passwords match
-    if (user && user.password === hashedPassword) {
+    if (user.password === hashedPassword) {
       return user;
     }
 
@@ -32,7 +38,6 @@ export class AuthService {
       name: user.username,
       sub: user._id,
       email: user.email,
-      role: user.role,
     };
 
     // Send login information email
