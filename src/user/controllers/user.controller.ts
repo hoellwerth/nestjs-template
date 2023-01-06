@@ -33,7 +33,7 @@ export class UserController {
     @Body('password') password: string,
     @Body('email') email: string,
   ): any {
-    return this.registerService.register(username, password, email);
+    return this.registerService.register(username, password, email, null);
   }
 
   // PATCH /edit
