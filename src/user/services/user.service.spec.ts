@@ -9,6 +9,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import * as crypto from 'crypto';
 import { SaltModel } from './register.service.spec';
 import { userStub } from '../../../test/stubs/user.stub';
+import { ConfigService } from '@nestjs/config';
 
 export class UserModel {
   constructor(private data) {}
@@ -57,6 +58,12 @@ describe('UserService', () => {
         {
           provide: getModelToken('Salt'),
           useValue: SaltModel,
+        },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn().mockReturnValue(''),
+          },
         },
       ],
     }).compile();
@@ -121,13 +128,11 @@ describe('UserService', () => {
   });
 
   it('should verify user', async () => {
-    const userSpy = jest
-      .spyOn(userService, 'getUserByToken')
-      .mockResolvedValue({
-        save: () => {
-          return null;
-        },
-      });
+    const userSpy = jest.spyOn(userModel, 'findOne').mockResolvedValue({
+      save: () => {
+        return null;
+      },
+    });
 
     const user = await userService.verifyUser('id');
 
