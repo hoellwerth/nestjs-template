@@ -22,7 +22,7 @@ export class UserService {
     const user = await this.userModel.findById(user_id);
 
     if (!user) {
-      throw new NotFoundException('user_not_found');
+      throw new NotFoundException('User not Found');
     }
 
     return user;
@@ -40,7 +40,7 @@ export class UserService {
     const user = await this.userModel.findById(user_id);
 
     if (!user) {
-      throw new NotFoundException('user_not_found');
+      throw new NotFoundException('User not Found');
     }
 
     this.userModel.findByIdAndDelete(user_id);
@@ -58,7 +58,7 @@ export class UserService {
     const user = await this.getUserById(user_id);
 
     if (!user) {
-      throw new NotFoundException('user_not_found');
+      throw new NotFoundException('User not Found');
     }
     // get salt from database
     const salt = await this.getSalt(user._id);
@@ -94,16 +94,14 @@ export class UserService {
     const user = await this.userModel.findOne({ email });
 
     if (!user) {
-      throw new NotFoundException('user_not_found');
+      throw new NotFoundException('User not Found');
     }
 
-    const token = this.generateId(12);
-
-    user.token = token;
+    user.token = this.generateId(12);
 
     user.save();
 
-    await this.mailService.sendForgetPassword(user, token);
+    // await this.mailService.sendForgetPassword(user, token);
 
     return { user: user.username };
   }
@@ -112,7 +110,7 @@ export class UserService {
     const user = await this.getUserByToken(token);
 
     if (!user) {
-      throw new NotFoundException('user_not_found');
+      throw new NotFoundException('User not Found');
     }
 
     // get salt from database
