@@ -21,10 +21,6 @@ import { ConfigService } from '@nestjs/config';
       }),
       inject: [ConfigService],
     }),
-    JwtModule.register({
-      secret: 'secret',
-      signOptions: { expiresIn: '7d' },
-    }),
   ],
   providers: [
     AuthService,
