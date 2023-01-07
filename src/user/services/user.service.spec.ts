@@ -10,20 +10,6 @@ import * as crypto from 'crypto';
 import { SaltModel } from './register.service.spec';
 import { userStub } from '../../../test/stubs/user.stub';
 
-export const mockUser = (
-  username = 'Test',
-  email = 'test@test.eu',
-  password = 'Test12345678',
-  role = 'user',
-  token: string | null = null,
-): User => ({
-  username,
-  email,
-  password,
-  role,
-  token,
-});
-
 export class UserModel {
   constructor(private data) {}
   save = jest.fn().mockResolvedValue(this.data);
