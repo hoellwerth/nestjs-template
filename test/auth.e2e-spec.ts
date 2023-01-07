@@ -5,12 +5,14 @@ import { DatabaseService } from '../src/database/services/database.service';
 import { AppModule } from '../src/app.module';
 import { RegisterService } from '../src/user/services/register.service';
 import * as request from 'supertest';
+import { MailService } from '../src/mail/services/mail.service';
 
 describe('Authorization (e2e)', () => {
   let app: INestApplication;
   let dbConnection: Connection;
   let httpServer: any;
   let registerService: RegisterService;
+  let mailService: MailService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -25,6 +27,9 @@ describe('Authorization (e2e)', () => {
       .getDataBaseHandle();
     httpServer = app.getHttpServer();
     registerService = moduleRef.get<RegisterService>(RegisterService);
+    mailService = moduleRef.get<MailService>(MailService);
+
+    mailService.e2eRunning = true;
   });
 
   it('should be defined', async () => {
@@ -35,6 +40,8 @@ describe('Authorization (e2e)', () => {
     await dbConnection.collection('users').deleteMany({});
     await dbConnection.collection('salts').deleteMany({});
     await app.close();
+
+    mailService.e2eRunning = false;
   });
 
   describe('login', () => {

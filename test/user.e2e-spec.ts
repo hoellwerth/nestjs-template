@@ -5,12 +5,14 @@ import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../src/app.module';
 import * as request from 'supertest';
 import { RegisterService } from '../src/user/services/register.service';
+import { MailService } from '../src/mail/services/mail.service';
 
 describe('User (e2e)', () => {
   let app: INestApplication;
   let dbConnection: Connection;
   let httpServer: any;
   let registerService: RegisterService;
+  let mailService: MailService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -25,6 +27,9 @@ describe('User (e2e)', () => {
       .getDataBaseHandle();
     httpServer = app.getHttpServer();
     registerService = moduleRef.get<RegisterService>(RegisterService);
+    mailService = moduleRef.get<MailService>(MailService);
+
+    mailService.e2eRunning = true;
   });
 
   it('should be defined', async () => {
@@ -38,6 +43,8 @@ describe('User (e2e)', () => {
 
     // close the app
     await app.close();
+
+    mailService.e2eRunning = false;
   });
 
   describe('GET /user/getuser/:userId', () => {
