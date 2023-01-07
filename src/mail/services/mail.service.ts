@@ -1,12 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import * as dotenv from 'dotenv';
 import { User } from '../../user/models/user.model';
 import { ConfigService } from '@nestjs/config';
-
-dotenv.config({
-  path: '.env',
-});
 
 @Injectable()
 export class MailService {
@@ -15,10 +10,18 @@ export class MailService {
     private readonly configService: ConfigService,
   ) {}
 
-  async sendUserConfirmation(user: User): Promise<void> {
-    if (this.configService.get<string>('NODE_ENV') === 'test') return;
+  e2eRunning = false;
 
-    const url = `${process.env.DOMAIN}verify/${user.role}`;
+  async sendUserConfirmation(user: User): Promise<void> {
+    if (
+      this.configService.get<string>('NODE_ENV') === 'test' &&
+      this.e2eRunning
+    )
+      return;
+
+    const url = `${this.configService.get<string>('DOMAIN')}verify/${
+      user.role
+    }`;
 
     await this.mailerService.sendMail({
       to: user.email,
@@ -32,7 +35,11 @@ export class MailService {
   }
 
   async sendUserInformation(user: User): Promise<void> {
-    if (this.configService.get<string>('NODE_ENV') === 'test') return;
+    if (
+      this.configService.get<string>('NODE_ENV') === 'test' &&
+      this.e2eRunning
+    )
+      return;
 
     await this.mailerService.sendMail({
       to: user.email,
@@ -45,7 +52,11 @@ export class MailService {
   }
 
   async sendForgetPassword(user: User | any, token: string): Promise<void> {
-    if (this.configService.get<string>('NODE_ENV') === 'test') return;
+    if (
+      this.configService.get<string>('NODE_ENV') === 'test' &&
+      this.e2eRunning
+    )
+      return;
 
     const url = `${process.env.DOMAIN}reset/${token}`;
 
@@ -61,7 +72,11 @@ export class MailService {
   }
 
   async sendPasswordInfo(user: User): Promise<void> {
-    if (this.configService.get<string>('NODE_ENV') === 'test') return;
+    if (
+      this.configService.get<string>('NODE_ENV') === 'test' &&
+      this.e2eRunning
+    )
+      return;
 
     await this.mailerService.sendMail({
       to: user.email,
