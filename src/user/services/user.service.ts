@@ -97,11 +97,13 @@ export class UserService {
       throw new NotFoundException('User not Found');
     }
 
-    user.token = this.generateId(12);
+    const token = this.generateId(12);
+
+    user.token = token;
 
     user.save();
 
-    // await this.mailService.sendForgetPassword(user, token);
+    await this.mailService.sendForgetPassword(user, token);
 
     return { user: user.username };
   }
