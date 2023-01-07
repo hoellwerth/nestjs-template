@@ -2,10 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UserService } from '../../user/services/user.service';
 import { JwtService } from '@nestjs/jwt';
-import {
-  mockUser,
-  UserServiceMock,
-} from '../../user/services/user.service.spec';
+import { UserServiceMock } from '../../user/services/user.service.spec';
+import { userStub } from '../../../test/stubs/user.stub';
 
 class JwtServiceMock {
   static sign = jest.fn();
@@ -21,7 +19,7 @@ export class AuthServiceMock {
   static hash = jest.fn();
 }
 
-describe('ServicesService', () => {
+describe('AuthService', () => {
   let authService: AuthService;
   let userService: UserService;
 
@@ -49,35 +47,26 @@ describe('ServicesService', () => {
   });
 
   it('should validate the credentials', async () => {
-    const mockedUser = {
-      username: mockUser().username,
-      email: mockUser().email,
-      password:
-        'dd8c6bc4caae948f9e7c5d440d8c56301598' +
-        '276ae30cb7d969743c150dec41ed67ca275b' +
-        'f62bda30dbbb5dfb5b7e1e9c522214c48fb4' +
-        'eb6a493ff211912cb865',
-      role: mockUser().role,
-      token: mockUser().token,
-    };
-
     const user = jest
       .spyOn(userService, 'getUserByName')
-      .mockResolvedValue(mockedUser);
+      .mockResolvedValue(userStub());
+
+    const salt = jest.spyOn(userService, 'getSalt').mockResolvedValue('salt');
 
     const validation = await authService.validateUser(
-      mockUser().username,
-      mockUser().password,
+      userStub().username,
+      'Test12345678',
     );
 
+    expect(salt).toHaveBeenCalled();
     expect(user).toHaveBeenCalled();
-    expect(validation).toEqual(mockedUser);
+    expect(validation).toEqual(userStub());
   });
 
   it('should login', async () => {
     const jwtSpy = jest.spyOn(JwtServiceMock, 'sign').mockReturnValue('token');
 
-    const login = await authService.login(mockUser());
+    const login = await authService.login(userStub());
 
     expect(login).toBe('token');
     expect(jwtSpy).toHaveBeenCalled();

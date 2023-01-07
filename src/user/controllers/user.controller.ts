@@ -33,7 +33,7 @@ export class UserController {
     @Body('password') password: string,
     @Body('email') email: string,
   ): any {
-    return this.registerService.register(username, password, email);
+    return this.registerService.register(username, password, email, null);
   }
 
   // PATCH /edit
@@ -61,9 +61,9 @@ export class UserController {
   }
 
   // GET /getuser/:user_id
-  @Get('getuser/:user_id')
-  async getUserById(@Param('user_id') user_id: string): Promise<any> {
-    const user = await this.userService.getUserById(user_id);
+  @Get('getuser/:userId')
+  async getUserById(@Param('userId') userId: string): Promise<any> {
+    const user = await this.userService.getUserById(userId);
 
     return {
       username: user.username,

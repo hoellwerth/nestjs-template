@@ -2,7 +2,7 @@ import { LocalStrategy } from './local.strategy';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from '../services/auth.service';
 import { AuthServiceMock } from '../services/auth.service.spec';
-import { mockUser } from '../../user/services/user.service.spec';
+import { userStub } from '../../../test/stubs/user.stub';
 
 describe('LocalStrategy', () => {
   let localStrategy: LocalStrategy;
@@ -28,9 +28,9 @@ describe('LocalStrategy', () => {
   it('should validate a user', async () => {
     const authSpy = jest
       .spyOn(AuthServiceMock, 'validateUser')
-      .mockResolvedValue(mockUser());
+      .mockResolvedValue(userStub());
 
-    expect(await localStrategy.validate('test', 'test')).toEqual(mockUser());
+    expect(await localStrategy.validate('test', 'test')).toEqual(userStub());
     expect(authSpy).toBeCalledWith('test', 'test');
   });
 });

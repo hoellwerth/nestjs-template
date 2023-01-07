@@ -1,18 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import * as dotenv from 'dotenv';
 import { User } from '../../user/models/user.model';
-
-dotenv.config({
-  path: 'src/modules/environment/config/dev.env',
-});
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MailService {
-  constructor(private mailerService: MailerService) {}
+  constructor(
+    private readonly mailerService: MailerService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  e2eRunning = false;
 
   async sendUserConfirmation(user: User): Promise<void> {
-    const url = `${process.env.DOMAIN}verify/${user.role}`;
+    if (
+      this.configService.get<string>('NODE_ENV') === 'test' &&
+      this.e2eRunning
+    )
+      return;
+
+    const url = `${this.configService.get<string>('DOMAIN')}verify/${
+      user.role
+    }`;
 
     await this.mailerService.sendMail({
       to: user.email,
@@ -26,6 +35,12 @@ export class MailService {
   }
 
   async sendUserInformation(user: User): Promise<void> {
+    if (
+      this.configService.get<string>('NODE_ENV') === 'test' &&
+      this.e2eRunning
+    )
+      return;
+
     await this.mailerService.sendMail({
       to: user.email,
       subject: 'Login to your nestjs-template account',
@@ -37,6 +52,12 @@ export class MailService {
   }
 
   async sendForgetPassword(user: User | any, token: string): Promise<void> {
+    if (
+      this.configService.get<string>('NODE_ENV') === 'test' &&
+      this.e2eRunning
+    )
+      return;
+
     const url = `${process.env.DOMAIN}reset/${token}`;
 
     await this.mailerService.sendMail({
@@ -51,6 +72,12 @@ export class MailService {
   }
 
   async sendPasswordInfo(user: User): Promise<void> {
+    if (
+      this.configService.get<string>('NODE_ENV') === 'test' &&
+      this.e2eRunning
+    )
+      return;
+
     await this.mailerService.sendMail({
       to: user.email,
       subject: 'Password Reset Information',

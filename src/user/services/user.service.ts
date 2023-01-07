@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../models/user.model';
@@ -18,7 +22,7 @@ export class UserService {
     const user = await this.userModel.findById(user_id);
 
     if (!user) {
-      throw new NotFoundException('user_not_found');
+      throw new NotFoundException('User not Found');
     }
 
     return user;
@@ -29,24 +33,14 @@ export class UserService {
   }
 
   async getUserByToken(token: string): Promise<any> {
-    if (!token) {
-      throw new NotFoundException('user_not_found');
-    }
-
-    const user = await this.userModel.findOne({ token: token });
-
-    if (!user) {
-      throw new NotFoundException('user_not_found');
-    }
-
-    return user;
+    return this.userModel.findOne({ token: token });
   }
 
   async deleteUser(user_id: string): Promise<any> {
     const user = await this.userModel.findById(user_id);
 
     if (!user) {
-      throw new NotFoundException('user_not_found');
+      throw new NotFoundException('User not Found');
     }
 
     this.userModel.findByIdAndDelete(user_id);
@@ -64,7 +58,7 @@ export class UserService {
     const user = await this.getUserById(user_id);
 
     if (!user) {
-      throw new NotFoundException('user_not_found');
+      throw new NotFoundException('User not Found');
     }
     // get salt from database
     const salt = await this.getSalt(user._id);
@@ -78,10 +72,14 @@ export class UserService {
   }
 
   async verifyUser(token: string): Promise<any> {
-    const user = await this.getUserByToken(token);
+    if (!token) {
+      throw new BadRequestException('No token provided');
+    }
+
+    const user = await this.userModel.findOne({ role: token });
 
     if (!user) {
-      throw new NotFoundException('user_not_found');
+      throw new NotFoundException('User not Found');
     }
 
     user.role = 'user';
@@ -96,7 +94,7 @@ export class UserService {
     const user = await this.userModel.findOne({ email });
 
     if (!user) {
-      throw new NotFoundException('user_not_found');
+      throw new NotFoundException('User not Found');
     }
 
     const token = this.generateId(12);
@@ -114,7 +112,7 @@ export class UserService {
     const user = await this.getUserByToken(token);
 
     if (!user) {
-      throw new NotFoundException('user_not_found');
+      throw new NotFoundException('User not Found');
     }
 
     // get salt from database

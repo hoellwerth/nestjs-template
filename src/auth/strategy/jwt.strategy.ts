@@ -3,7 +3,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import * as dotenv from 'dotenv';
 
 dotenv.config({
-  path: 'src/modules/environment/config/dev.env',
+  path: '.env',
 });
 
 export class JwtStrategy extends PassportStrategy(Strategy) {

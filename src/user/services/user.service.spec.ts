@@ -8,37 +8,25 @@ import { MailServiceMock } from '../../mail/services/mail.service.spec';
 import { getModelToken } from '@nestjs/mongoose';
 import * as crypto from 'crypto';
 import { SaltModel } from './register.service.spec';
-
-export const mockUser = (
-  username = 'Test',
-  email = 'test@test.eu',
-  password = 'Test12345678',
-  role = 'user',
-  token: string | null = null,
-): User => ({
-  username,
-  email,
-  password,
-  role,
-  token,
-});
+import { userStub } from '../../../test/stubs/user.stub';
+import { ConfigService } from '@nestjs/config';
 
 export class UserModel {
   constructor(private data) {}
   save = jest.fn().mockResolvedValue(this.data);
-  static find = jest.fn().mockResolvedValue(mockUser());
-  static findOne = jest.fn().mockResolvedValue(mockUser());
-  static findOneAndUpdate = jest.fn().mockResolvedValue(mockUser());
+  static find = jest.fn().mockResolvedValue(userStub());
+  static findOne = jest.fn().mockResolvedValue(userStub());
+  static findOneAndUpdate = jest.fn().mockResolvedValue(userStub());
   static deleteOne = jest.fn().mockResolvedValue(true);
-  static findById = jest.fn().mockResolvedValue(mockUser());
+  static findById = jest.fn().mockResolvedValue(userStub());
   static findByIdAndDelete = jest.fn().mockResolvedValue(true);
   static findOneAndDelete = jest.fn().mockResolvedValue(true);
 }
 
 export class UserServiceMock {
-  static getUserById = jest.fn().mockResolvedValue(mockUser());
-  static getUserByName = jest.fn().mockResolvedValue(mockUser());
-  static getUserByToken = jest.fn().mockResolvedValue(mockUser());
+  static getUserById = jest.fn().mockResolvedValue(userStub());
+  static getUserByName = jest.fn().mockResolvedValue(userStub());
+  static getUserByToken = jest.fn().mockResolvedValue(userStub());
   static deleteUser = jest.fn();
   static editUser = jest.fn();
   static verifyUser = jest.fn();
@@ -71,6 +59,12 @@ describe('UserService', () => {
           provide: getModelToken('Salt'),
           useValue: SaltModel,
         },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn().mockReturnValue(''),
+          },
+        },
       ],
     }).compile();
 
@@ -87,28 +81,28 @@ describe('UserService', () => {
   it('should get user by id', async () => {
     const user = await userService.getUserById('1');
 
-    expect(user).toEqual(mockUser());
+    expect(user).toEqual(userStub());
   });
 
   it('should get user by name', async () => {
     const userSpy = jest
       .spyOn(userModel, 'findOne')
-      .mockResolvedValue(mockUser());
+      .mockResolvedValue(userStub());
 
     const user = await userService.getUserByName('');
 
-    expect(user).toEqual(mockUser());
+    expect(user).toEqual(userStub());
     expect(userSpy).toHaveBeenCalled();
   });
 
   it('should get user by token', async () => {
     const userModelSpy = jest
       .spyOn(userModel, 'findOne')
-      .mockResolvedValue(mockUser());
+      .mockResolvedValue(userStub());
 
     const user = await userService.getUserByToken('Token');
 
-    expect(user).toEqual(mockUser());
+    expect(user).toEqual(userStub());
     expect(userModelSpy).toBeCalled();
   });
 
@@ -134,13 +128,11 @@ describe('UserService', () => {
   });
 
   it('should verify user', async () => {
-    const userSpy = jest
-      .spyOn(userService, 'getUserByToken')
-      .mockResolvedValue({
-        save: () => {
-          return null;
-        },
-      });
+    const userSpy = jest.spyOn(userModel, 'findOne').mockResolvedValue({
+      save: () => {
+        return null;
+      },
+    });
 
     const user = await userService.verifyUser('id');
 
@@ -161,7 +153,7 @@ describe('UserService', () => {
   it('should send password confirmation', async () => {
     const mail = jest.spyOn(mailService, 'sendForgetPassword');
     const userSpy = jest.spyOn(userModel, 'findOne').mockResolvedValue({
-      ...mockUser(),
+      ...userStub(),
       save: () => {
         return null;
       },

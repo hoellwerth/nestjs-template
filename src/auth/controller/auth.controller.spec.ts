@@ -3,11 +3,9 @@ import { AuthController } from './auth.controller';
 import { AuthService } from '../services/auth.service';
 import { AuthServiceMock } from '../services/auth.service.spec';
 import { UserService } from '../../user/services/user.service';
-import {
-  mockUser,
-  UserServiceMock,
-} from '../../user/services/user.service.spec';
+import { UserServiceMock } from '../../user/services/user.service.spec';
 import { VerifyStrategy } from '../strategy/verify.strategy';
+import { userStub } from '../../../test/stubs/user.stub';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -45,19 +43,15 @@ describe('AuthController', () => {
 
     const user = jest
       .spyOn(UserServiceMock, 'getUserByName')
-      .mockResolvedValue({ ...mockUser(), _id: 'id' });
+      .mockResolvedValue({ ...userStub(), _id: 'id' });
 
     const result = await controller.login({
-      user: mockUser(),
+      user: userStub(),
     });
 
-    expect(result).toEqual({
-      access_token: 'token',
-      id: 'id',
-      role: 'user',
-    });
+    expect(result).toBe('token');
 
-    expect(authServiceSpy).toBeCalledWith(mockUser());
-    expect(user).toBeCalledWith(mockUser().username);
+    expect(authServiceSpy).toBeCalledWith(userStub());
+    expect(user).toBeCalledWith(userStub().username);
   });
 });
